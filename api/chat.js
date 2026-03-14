@@ -1,42 +1,62 @@
+const https = require('https');
+
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  // Manually parse body if needed
+  let body = req.body;
+  if (typeof body === 'string') {
+    try { body = JSON.parse(body); } catch(e) {}
   }
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
-  const { messages, system } = req.body;
+  const { messages, system } = body || {};
 
   if (!messages || !system) {
-    return res.status(400).json({ error: 'Missing messages or system' });
+    return res.status(400).json({ error: 'Missing messages or system', received: typeof body });
   }
 
-  try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system,
-        messages,
-      }),
+  const payload = JSON.stringify({
+    model: 'claude-sonnet-4-20250514',
+    max_tokens: 1000,
+    system,
+    messages,
+  });
+
+  const options = {
+    hostname: 'api.anthropic.com',
+    path: '/v1/messages',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': process.env.ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01',
+      'Content-Length': Buffer.byteLength(payload),
+    },
+  };
+
+  return new Promise((resolve) => {
+    const apiReq = https.request(options, (apiRes) => {
+      let data = '';
+      apiRes.on('data', chunk => data += chunk);
+      apiRes.on('end', () => {
+        try {
+          res.status(apiRes.statusCode).json(JSON.parse(data));
+        } catch(e) {
+          res.status(500).json({ error: 'Parse error', raw: data });
+        }
+        resolve();
+      });
     });
-
-    const data = await response.json();
-    return res.status(response.status).json(data);
-  } catch (err) {
-    console.error('Proxy error:', err);
-    return res.status(500).json({ error: String(err) });
-  }
+    apiReq.on('error', (e) => {
+      res.status(500).json({ error: e.message });
+      resolve();
+    });
+    apiReq.write(payload);
+    apiReq.end();
+  });
 };
