@@ -681,9 +681,13 @@ async function sendMessage(override) {
 
   try {
     // Calls our secure /api/chat proxy — API key never exposed to browser
-    const res = await fetch('/api/chat', {
+    const res = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://api.anthropic.com/v1/messages'), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+  'Content-Type': 'application/json',
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'anthropic-version': '2023-06-01',
+},
       body: JSON.stringify({ messages: conversationHistory, system: SYSTEM_PROMPT })
     });
     const data = await res.json();
