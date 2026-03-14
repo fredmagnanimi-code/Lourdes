@@ -685,7 +685,12 @@ async function sendMessage(override) {
       method: 'POST',
       headers: {
   'Content-Type': 'application/json',
-  'x-api-key': 'YOUR_API_KEY_HERE',
+  'x-api-key': 'body: JSON.stringify({
+  model: 'claude-sonnet-4-20250514',
+  max_tokens: 1000,
+  system: SYSTEM_PROMPT,
+  messages: conversationHistory
+})',
   'anthropic-version': '2023-06-01',
 },
       body: JSON.stringify({ messages: conversationHistory, system: SYSTEM_PROMPT })
