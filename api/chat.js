@@ -8,17 +8,19 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  // Manually parse body if needed
-  let body = req.body;
-  if (typeof body === 'string') {
-    try { body = JSON.parse(body); } catch(e) {}
-  }
+  // Parse body manually — Vercel doesn't always auto-parse
+  let body = '';
+  await new Promise((resolve) => {
+    req.on('data', chunk => body += chunk);
+    req.on('end', resolve);
+  });
 
-  const { messages, system } = body || {};
+  let parsed;
+  try { parsed = JSON.parse(body); }
+  catch(e) { return res.status(400).json({ error: 'Invalid JSON', raw: body.substring(0, 100) }); }
 
-  if (!messages || !system) {
-    return res.status(400).json({ error: 'Missing messages or system', received: typeof body });
-  }
+  const { messages, system } = parsed;
+  if (!messages || !system) return res.status(400).json({ error: 'Missing fields' });
 
   const payload = JSON.stringify({
     model: 'claude-sonnet-4-20250514',
@@ -44,18 +46,12 @@ module.exports = async function handler(req, res) {
       let data = '';
       apiRes.on('data', chunk => data += chunk);
       apiRes.on('end', () => {
-        try {
-          res.status(apiRes.statusCode).json(JSON.parse(data));
-        } catch(e) {
-          res.status(500).json({ error: 'Parse error', raw: data });
-        }
+        try { res.status(apiRes.statusCode).json(JSON.parse(data)); }
+        catch(e) { res.status(500).json({ error: 'Parse error', raw: data.substring(0, 200) }); }
         resolve();
       });
     });
-    apiReq.on('error', (e) => {
-      res.status(500).json({ error: e.message });
-      resolve();
-    });
+    apiReq.on('error', (e) => { res.status(500).json({ error: e.message }); resolve(); });
     apiReq.write(payload);
     apiReq.end();
   });
