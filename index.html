@@ -666,7 +666,6 @@ let conversationHistory = [];
 let isLoading = false;
 let currentIntent = 'open';
 
-const API_KEY = 'YOUR_KEY_HERE';
 const BRACELET_TYPE = new URLSearchParams(window.location.search).get('bracelet') || 'sacred-heart';
 const BRACELET_NAMES = {
   'sacred-heart': 'Sacred Heart Bracelet',
@@ -819,9 +818,9 @@ async function sendMessage(overrideText) {
   showTyping();
 
   try {
-    const response = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://api.anthropic.com/v1/messages'), {
+    const response = await fetch('/api/chat', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
@@ -834,31 +833,22 @@ async function sendMessage(overrideText) {
     removeTyping();
 
     if (data.content && data.content[0]) {
-  const reply = data.content[0].text;
-  addMessage('lourdes', reply);
-  document.getElementById('api-error').style.display = 'none';
-  conversationHistory.push({ role: 'assistant', content: reply });
-} else {
-  throw new Error('No response');
-}
+      const reply = data.content[0].text;
+      addMessage('lourdes', reply);
+      document.getElementById('api-error').style.display = 'none';
+      conversationHistory.push({ role: 'assistant', content: reply });
+    } else {
+      throw new Error('No response');
+    }
   } catch (e) {
     removeTyping();
     document.getElementById('api-error').style.display = 'block';
-    // Fallback response for demo
-    const fallback = getFallbackResponse(text);
-    addMessage('lourdes', fallback);
-    conversationHistory.push({ role: 'assistant', content: fallback });
   }
 
   isLoading = false;
   document.getElementById('send-btn').disabled = false;
 }
 
-function getFallbackResponse(text) {
-  const t = text.toLowerCase();
-  if (t.includes('mom') || t.includes('mother')) {
-    return `Your mother… she carries so much, doesn't she? And so do you, for her.\n\nHere is a prayer:\n\n*Lord, hold my mother in your hands today. Where she is strong, let her know she is seen. Where she is tired, let her feel your rest. Give her what I cannot give her — your peace, your healing, your nearness.*\n\n*Our Lady of Lourdes, who knows what it is to watch a child suffer, pray for her.*\n\nShall I help you submit this to the Shrine at Lourdes?`;
-  }
   if (t.includes('struggling') || t.includes('hard') || t.includes('difficult')) {
     return `I hear you. You don't have to explain it all at once.\n\nCan you tell me just one thing — is this something you're carrying for yourself, or for someone you love? That will help me know what to bring to you.`;
   }
