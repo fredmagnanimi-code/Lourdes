@@ -8,407 +8,121 @@
 <style>
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html, body { height:100%; background:#0A1020; }
+.device-shell { max-width:390px; margin:0 auto; height:100vh; position:relative; overflow:hidden; background:#0A1020; display:flex; flex-direction:column; }
+.screen { position:absolute; inset:0; display:flex; flex-direction:column; opacity:0; pointer-events:none; transition:opacity 0.5s ease; overflow:hidden; }
+.screen.active { opacity:1; pointer-events:all; }
 
-/* ── DEVICE SHELL ── */
-.device-shell {
-  max-width: 390px;
-  margin: 0 auto;
-  height: 100vh;
-  position: relative;
-  overflow: hidden;
-  background: #0A1020;
-  display: flex;
-  flex-direction: column;
-}
+/* WELCOME */
+#screen-welcome { background:#0A1020; align-items:center; justify-content:center; text-align:center; padding:40px 32px; }
+.welcome-ripple { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; }
+.ripple-ring { position:absolute; border-radius:50%; border:1px solid rgba(184,151,58,0.2); animation:ripple 3s ease-out infinite; }
+.ripple-ring:nth-child(1){width:160px;height:160px;animation-delay:0s}
+.ripple-ring:nth-child(2){width:240px;height:240px;animation-delay:0.8s}
+.ripple-ring:nth-child(3){width:320px;height:320px;animation-delay:1.6s}
+.ripple-ring:nth-child(4){width:400px;height:400px;animation-delay:2.4s}
+@keyframes ripple{0%{opacity:0.5;transform:scale(0.8)}100%{opacity:0;transform:scale(1.1)}}
+.welcome-drop { width:80px; height:80px; background:radial-gradient(circle at 40% 35%,rgba(212,185,106,0.4),rgba(10,16,32,0.9)); border-radius:50% 50% 50% 50%/60% 60% 40% 40%; border:1px solid rgba(184,151,58,0.4); display:flex; align-items:center; justify-content:center; font-size:32px; margin-bottom:36px; position:relative; z-index:2; animation:float 4s ease-in-out infinite; }
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.welcome-title { font-family:'Cormorant Garamond',serif; font-size:38px; font-weight:300; font-style:italic; color:#F5F0E8; line-height:1.1; margin-bottom:12px; position:relative; z-index:2; }
+.welcome-sub { font-family:'Cormorant Garamond',serif; font-size:15px; font-style:italic; color:rgba(184,151,58,0.7); margin-bottom:8px; position:relative; z-index:2; }
+.welcome-body { font-family:'DM Sans',sans-serif; font-size:12px; font-weight:300; color:rgba(255,255,255,0.35); line-height:1.7; max-width:260px; margin:0 auto 48px; position:relative; z-index:2; }
+.btn-begin { background:#B8973A; color:#0A1020; font-family:'DM Sans',sans-serif; font-size:11px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase; padding:16px 44px; border:none; cursor:pointer; position:relative; z-index:2; transition:all 0.2s; width:100%; max-width:260px; }
+.btn-begin:hover{background:#D4B96A}
+.welcome-bracelet { font-size:10px; color:rgba(255,255,255,0.2); letter-spacing:1.5px; text-transform:uppercase; margin-top:20px; position:relative; z-index:2; }
 
-/* ── SCREENS ── */
-.screen {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.5s ease;
-  overflow: hidden;
-}
-.screen.active { opacity: 1; pointer-events: all; }
+/* CHOOSE */
+#screen-choose { background:#0E1828; }
+.choose-header { padding:52px 28px 24px; border-bottom:1px solid rgba(255,255,255,0.06); flex-shrink:0; }
+.choose-greeting { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:300; font-style:italic; color:#F5F0E8; line-height:1.2; margin-bottom:8px; }
+.choose-sub { font-family:'DM Sans',sans-serif; font-size:11px; color:rgba(184,151,58,0.65); letter-spacing:1px; text-transform:uppercase; }
+.choose-options { padding:20px; flex:1; overflow-y:auto; }
+.opt { display:flex; align-items:center; gap:16px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); padding:18px 20px; margin-bottom:10px; cursor:pointer; transition:all 0.2s; }
+.opt:hover{background:rgba(184,151,58,0.08);border-color:rgba(184,151,58,0.25)}
+.opt-icon{font-size:22px;width:32px;text-align:center;flex-shrink:0}
+.opt-text h3{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;color:#F5F0E8;margin-bottom:3px}
+.opt-text p{font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(255,255,255,0.35);font-weight:300}
+.opt-arrow{margin-left:auto;color:rgba(184,151,58,0.4);font-size:16px;flex-shrink:0}
+.divider{display:flex;align-items:center;gap:12px;padding:8px 0 16px}
+.divider-line{flex:1;height:1px;background:rgba(255,255,255,0.06)}
+.divider-text{font-size:10px;color:rgba(255,255,255,0.2);letter-spacing:1.5px;text-transform:uppercase;font-family:'DM Sans',sans-serif}
 
-/* ════════════════════════
-   SCREEN 1 — WELCOME
-════════════════════════ */
-#screen-welcome {
-  background: #0A1020;
-  align-items: center; justify-content: center;
-  text-align: center; padding: 40px 32px;
-}
+/* TALK */
+#screen-talk { background:#0A1020; display:flex; flex-direction:column; }
+.talk-header { background:#0E1828; padding:52px 20px 16px; display:flex; align-items:center; gap:12px; border-bottom:1px solid rgba(255,255,255,0.06); flex-shrink:0; }
+.back-btn { background:none; border:none; cursor:pointer; color:rgba(184,151,58,0.6); font-size:20px; padding:4px; transition:color 0.2s; }
+.back-btn:hover{color:#B8973A}
+.talk-header-info{flex:1}
+.talk-header-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:#F5F0E8}
+.talk-header-sub{font-size:10px;color:rgba(184,151,58,0.55);letter-spacing:1.5px;text-transform:uppercase;font-family:'DM Sans',sans-serif}
+.lourdes-avatar{width:38px;height:38px;background:radial-gradient(circle at 40% 35%,rgba(184,151,58,0.4),rgba(14,24,40,0.9));border-radius:50%;border:1px solid rgba(184,151,58,0.3);display:flex;align-items:center;justify-content:center;font-size:16px}
+.messages{flex:1;overflow-y:auto;padding:20px 16px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth}
+.messages::-webkit-scrollbar{width:3px}
+.messages::-webkit-scrollbar-thumb{background:rgba(184,151,58,0.2)}
+.msg{display:flex;gap:10px;align-items:flex-end;max-width:88%;animation:msgIn 0.3s ease both}
+@keyframes msgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.msg.user{align-self:flex-end;flex-direction:row-reverse}
+.msg-avatar{width:28px;height:28px;border-radius:50%;background:rgba(184,151,58,0.15);border:1px solid rgba(184,151,58,0.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.msg.user .msg-avatar{background:rgba(255,255,255,0.06)}
+.msg-bubble{padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:13.5px;line-height:1.65;font-weight:300}
+.msg.lourdes .msg-bubble{background:#1A2840;color:rgba(255,255,255,0.82);border-radius:2px 14px 14px 14px}
+.msg.lourdes .msg-bubble em{font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;color:rgba(212,185,106,0.9)}
+.msg.user .msg-bubble{background:#B8973A;color:#0A1020;border-radius:14px 2px 14px 14px;font-weight:400}
+.typing-indicator{display:flex;gap:10px;align-items:flex-end;animation:msgIn 0.3s ease both}
+.typing-dots{background:#1A2840;padding:14px 18px;border-radius:2px 14px 14px 14px;display:flex;gap:5px;align-items:center}
+.typing-dots span{width:6px;height:6px;border-radius:50%;background:rgba(184,151,58,0.5);animation:dot 1.2s ease-in-out infinite}
+.typing-dots span:nth-child(2){animation-delay:0.2s}
+.typing-dots span:nth-child(3){animation-delay:0.4s}
+@keyframes dot{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+.quick-prompts{padding:10px 16px 6px;display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,0.04);flex-shrink:0}
+.qp{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);font-family:'DM Sans',sans-serif;font-size:11px;padding:6px 12px;cursor:pointer;transition:all 0.2s;white-space:nowrap;font-weight:300}
+.qp:hover{background:rgba(184,151,58,0.1);border-color:rgba(184,151,58,0.25);color:rgba(212,185,106,0.9)}
+.input-row{padding:12px 16px 28px;display:flex;gap:10px;align-items:flex-end;background:#0A1020;border-top:1px solid rgba(255,255,255,0.05);flex-shrink:0}
+.msg-input{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.8);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;padding:12px 16px;resize:none;min-height:44px;max-height:100px;outline:none;transition:border-color 0.2s;line-height:1.4}
+.msg-input::placeholder{color:rgba(255,255,255,0.2)}
+.msg-input:focus{border-color:rgba(184,151,58,0.35)}
+.send-btn{background:#B8973A;border:none;cursor:pointer;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#0A1020;transition:all 0.2s;flex-shrink:0}
+.send-btn:hover{background:#D4B96A}
+.send-btn:disabled{background:rgba(184,151,58,0.25);cursor:not-allowed}
+#api-error{display:none;background:rgba(138,58,72,0.15);border:1px solid rgba(138,58,72,0.3);margin:10px 16px;padding:12px 16px;font-size:11px;color:rgba(255,180,180,0.7);font-family:'DM Sans',sans-serif;font-weight:300}
 
-.welcome-ripple {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  pointer-events: none;
-}
-.ripple-ring {
-  position: absolute;
-  border-radius: 50%;
-  border: 1px solid rgba(184,151,58,0.2);
-  animation: ripple 3s ease-out infinite;
-}
-.ripple-ring:nth-child(1) { width:160px; height:160px; animation-delay:0s; }
-.ripple-ring:nth-child(2) { width:240px; height:240px; animation-delay:0.8s; }
-.ripple-ring:nth-child(3) { width:320px; height:320px; animation-delay:1.6s; }
-.ripple-ring:nth-child(4) { width:400px; height:400px; animation-delay:2.4s; }
-@keyframes ripple {
-  0%   { opacity:0.5; transform:scale(0.8); }
-  100% { opacity:0;   transform:scale(1.1); }
-}
+/* PRAYERS */
+#screen-prayers{background:#0E1828;display:flex;flex-direction:column}
+.prayers-header{background:#0A1020;padding:52px 20px 20px;border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0}
+.prayers-header-top{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.prayers-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-style:italic;color:#F5F0E8}
+.prayer-list{flex:1;overflow-y:auto;padding:16px}
+.prayer-item{display:flex;align-items:center;gap:14px;padding:16px;margin-bottom:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);cursor:pointer;transition:all 0.2s}
+.prayer-item:hover{background:rgba(184,151,58,0.07);border-color:rgba(184,151,58,0.2)}
+.prayer-item.featured{border-color:rgba(184,151,58,0.3);background:rgba(184,151,58,0.06)}
+.prayer-icon{font-size:20px;width:28px;text-align:center;flex-shrink:0}
+.prayer-info h3{font-family:'Cormorant Garamond',serif;font-size:16px;color:#F5F0E8;margin-bottom:2px}
+.prayer-info p{font-size:11px;color:rgba(255,255,255,0.3);font-family:'DM Sans',sans-serif;font-weight:300}
+.prayer-today{font-size:9px;background:#B8973A;color:#0A1020;padding:2px 7px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-left:auto;flex-shrink:0;font-family:'DM Sans',sans-serif}
 
-.welcome-drop {
-  width: 80px; height: 80px;
-  background: radial-gradient(circle at 40% 35%, rgba(212,185,106,0.4), rgba(10,16,32,0.9));
-  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-  border: 1px solid rgba(184,151,58,0.4);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 32px; margin-bottom: 36px; position: relative; z-index: 2;
-  animation: float 4s ease-in-out infinite;
-}
-@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+/* PRAYER VIEW */
+#screen-prayer-view{background:#0A1020;display:flex;flex-direction:column}
+.prayer-view-header{padding:52px 20px 20px;background:#0E1828;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:12px;flex-shrink:0}
+.prayer-view-body{flex:1;overflow-y:auto;padding:32px 28px}
+.prayer-view-name{font-family:'Cormorant Garamond',serif;font-size:11px;font-weight:300;color:rgba(184,151,58,0.6);letter-spacing:3px;text-transform:uppercase;margin-bottom:20px}
+.prayer-view-text{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;font-style:italic;color:rgba(245,240,232,0.9);line-height:1.85;margin-bottom:36px}
+.prayer-reflection{background:rgba(184,151,58,0.07);border-left:2px solid rgba(184,151,58,0.4);padding:16px 20px;margin-bottom:28px}
+.prayer-reflection p{font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,0.45);line-height:1.7;font-weight:300}
+.prayer-actions{display:flex;flex-direction:column;gap:10px}
+.prayer-action-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.55);font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:14px 20px;cursor:pointer;transition:all 0.2s;text-align:left;display:flex;align-items:center;gap:10px}
+.prayer-action-btn:hover{background:rgba(184,151,58,0.1);border-color:rgba(184,151,58,0.3);color:rgba(212,185,106,0.9)}
+.prayer-action-btn.primary{background:#B8973A;color:#0A1020;border-color:#B8973A;font-weight:600}
+.prayer-action-btn.primary:hover{background:#D4B96A}
 
-.welcome-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 38px; font-weight: 300; font-style: italic;
-  color: #F5F0E8; line-height: 1.1; margin-bottom: 12px;
-  position: relative; z-index: 2;
-}
-.welcome-sub {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 15px; font-style: italic;
-  color: rgba(184,151,58,0.7); margin-bottom: 8px;
-  position: relative; z-index: 2;
-}
-.welcome-body {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px; font-weight: 300;
-  color: rgba(255,255,255,0.35); line-height: 1.7;
-  max-width: 260px; margin: 0 auto 48px;
-  position: relative; z-index: 2;
-}
-
-.btn-begin {
-  background: #B8973A; color: #0A1020;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 11px; font-weight: 600;
-  letter-spacing: 2.5px; text-transform: uppercase;
-  padding: 16px 44px; border: none; cursor: pointer;
-  position: relative; z-index: 2;
-  transition: all 0.2s; width: 100%; max-width: 260px;
-}
-.btn-begin:hover { background: #D4B96A; }
-
-.welcome-bracelet {
-  font-size: 10px; color: rgba(255,255,255,0.2);
-  letter-spacing: 1.5px; text-transform: uppercase;
-  margin-top: 20px; position: relative; z-index: 2;
-}
-
-/* ════════════════════════
-   SCREEN 2 — CHOOSE
-════════════════════════ */
-#screen-choose {
-  background: #0E1828;
-}
-
-.choose-header {
-  padding: 52px 28px 24px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-.choose-greeting {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 28px; font-weight: 300; font-style: italic;
-  color: #F5F0E8; line-height: 1.2; margin-bottom: 8px;
-}
-.choose-sub {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 11px; color: rgba(184,151,58,0.65);
-  letter-spacing: 1px; text-transform: uppercase;
-}
-
-.choose-options { padding: 20px 20px; flex: 1; overflow-y: auto; }
-
-.opt {
-  display: flex; align-items: center; gap: 16px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.07);
-  padding: 18px 20px; margin-bottom: 10px;
-  cursor: pointer; transition: all 0.2s;
-}
-.opt:hover { background: rgba(184,151,58,0.08); border-color: rgba(184,151,58,0.25); }
-.opt-icon { font-size: 22px; width: 32px; text-align: center; flex-shrink: 0; }
-.opt-text h3 { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 400; color: #F5F0E8; margin-bottom: 3px; }
-.opt-text p  { font-family: 'DM Sans', sans-serif; font-size: 11px; color: rgba(255,255,255,0.35); font-weight: 300; }
-.opt-arrow   { margin-left: auto; color: rgba(184,151,58,0.4); font-size: 16px; flex-shrink: 0; }
-
-.divider {
-  display: flex; align-items: center; gap: 12px;
-  padding: 8px 0 16px;
-}
-.divider-line { flex:1; height:1px; background:rgba(255,255,255,0.06); }
-.divider-text { font-size:10px; color:rgba(255,255,255,0.2); letter-spacing:1.5px; text-transform:uppercase; font-family:'DM Sans',sans-serif; }
-
-/* ════════════════════════
-   SCREEN 3 — TALK (AI)
-════════════════════════ */
-#screen-talk {
-  background: #0A1020;
-  display: flex; flex-direction: column;
-}
-
-.talk-header {
-  background: #0E1828;
-  padding: 52px 20px 16px;
-  display: flex; align-items: center; gap: 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  flex-shrink: 0;
-}
-.back-btn {
-  background: none; border: none; cursor: pointer;
-  color: rgba(184,151,58,0.6); font-size: 20px; padding: 4px;
-  transition: color 0.2s;
-}
-.back-btn:hover { color: #B8973A; }
-.talk-header-info { flex: 1; }
-.talk-header-name {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 20px; font-style: italic; color: #F5F0E8;
-}
-.talk-header-sub {
-  font-size: 10px; color: rgba(184,151,58,0.55);
-  letter-spacing: 1.5px; text-transform: uppercase;
-  font-family: 'DM Sans', sans-serif;
-}
-.lourdes-avatar {
-  width: 38px; height: 38px;
-  background: radial-gradient(circle at 40% 35%, rgba(184,151,58,0.4), rgba(14,24,40,0.9));
-  border-radius: 50%; border: 1px solid rgba(184,151,58,0.3);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
-}
-
-.messages {
-  flex: 1; overflow-y: auto; padding: 20px 16px;
-  display: flex; flex-direction: column; gap: 14px;
-  scroll-behavior: smooth;
-}
-.messages::-webkit-scrollbar { width: 3px; }
-.messages::-webkit-scrollbar-thumb { background: rgba(184,151,58,0.2); }
-
-.msg {
-  display: flex; gap: 10px; align-items: flex-end; max-width: 88%;
-  animation: msgIn 0.3s ease both;
-}
-@keyframes msgIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-.msg.user { align-self: flex-end; flex-direction: row-reverse; }
-
-.msg-avatar {
-  width: 28px; height: 28px; border-radius: 50%;
-  background: rgba(184,151,58,0.15); border: 1px solid rgba(184,151,58,0.2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 12px; flex-shrink: 0;
-}
-.msg.user .msg-avatar { background: rgba(255,255,255,0.06); }
-
-.msg-bubble {
-  padding: 12px 16px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13.5px; line-height: 1.65; font-weight: 300;
-}
-.msg.lourdes .msg-bubble {
-  background: #1A2840; color: rgba(255,255,255,0.82);
-  border-radius: 2px 14px 14px 14px;
-}
-.msg.lourdes .msg-bubble em {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 15px; font-style: italic; color: rgba(212,185,106,0.9);
-}
-.msg.user .msg-bubble {
-  background: #B8973A; color: #0A1020;
-  border-radius: 14px 2px 14px 14px; font-weight: 400;
-}
-
-.typing-indicator {
-  display: flex; gap: 10px; align-items: flex-end;
-  animation: msgIn 0.3s ease both;
-}
-.typing-dots {
-  background: #1A2840; padding: 14px 18px;
-  border-radius: 2px 14px 14px 14px;
-  display: flex; gap: 5px; align-items: center;
-}
-.typing-dots span {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: rgba(184,151,58,0.5);
-  animation: dot 1.2s ease-in-out infinite;
-}
-.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes dot { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
-
-/* Quick prompts */
-.quick-prompts {
-  padding: 10px 16px 6px;
-  display: flex; gap: 8px; flex-wrap: wrap;
-  border-top: 1px solid rgba(255,255,255,0.04);
-  flex-shrink: 0;
-}
-.qp {
-  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.45); font-family: 'DM Sans', sans-serif;
-  font-size: 11px; padding: 6px 12px; cursor: pointer;
-  transition: all 0.2s; white-space: nowrap; font-weight: 300;
-}
-.qp:hover { background: rgba(184,151,58,0.1); border-color: rgba(184,151,58,0.25); color: rgba(212,185,106,0.9); }
-
-.input-row {
-  padding: 12px 16px 28px;
-  display: flex; gap: 10px; align-items: flex-end;
-  background: #0A1020;
-  border-top: 1px solid rgba(255,255,255,0.05);
-  flex-shrink: 0;
-}
-.msg-input {
-  flex: 1; background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.8); font-family: 'DM Sans', sans-serif;
-  font-size: 13px; font-weight: 300;
-  padding: 12px 16px; resize: none; min-height: 44px; max-height: 100px;
-  outline: none; transition: border-color 0.2s; line-height: 1.4;
-}
-.msg-input::placeholder { color: rgba(255,255,255,0.2); }
-.msg-input:focus { border-color: rgba(184,151,58,0.35); }
-.send-btn {
-  background: #B8973A; border: none; cursor: pointer;
-  width: 44px; height: 44px; display: flex;
-  align-items: center; justify-content: center;
-  font-size: 18px; transition: all 0.2s; flex-shrink: 0;
-}
-.send-btn:hover { background: #D4B96A; }
-.send-btn:disabled { background: rgba(184,151,58,0.25); cursor: not-allowed; }
-
-/* ════════════════════════
-   SCREEN 4 — PRAYERS
-════════════════════════ */
-#screen-prayers {
-  background: #0E1828;
-  display: flex; flex-direction: column;
-}
-
-.prayers-header {
-  background: #0A1020;
-  padding: 52px 20px 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  flex-shrink: 0;
-}
-.prayers-header-top { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
-.prayers-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-style: italic; color: #F5F0E8; }
-
-.prayer-list { flex: 1; overflow-y: auto; padding: 16px; }
-.prayer-item {
-  display: flex; align-items: center; gap: 14px;
-  padding: 16px; margin-bottom: 8px;
-  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
-  cursor: pointer; transition: all 0.2s;
-}
-.prayer-item:hover { background: rgba(184,151,58,0.07); border-color: rgba(184,151,58,0.2); }
-.prayer-item.featured { border-color: rgba(184,151,58,0.3); background: rgba(184,151,58,0.06); }
-.prayer-icon { font-size: 20px; width: 28px; text-align: center; flex-shrink: 0; }
-.prayer-info h3 { font-family: 'Cormorant Garamond', serif; font-size: 16px; color: #F5F0E8; margin-bottom: 2px; }
-.prayer-info p  { font-size: 11px; color: rgba(255,255,255,0.3); font-family: 'DM Sans', sans-serif; font-weight: 300; }
-.prayer-today { font-size: 9px; background: #B8973A; color: #0A1020; padding: 2px 7px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-left: auto; flex-shrink: 0; font-family: 'DM Sans', sans-serif; }
-
-/* ════════════════════════
-   SCREEN 5 — PRAYER VIEW
-════════════════════════ */
-#screen-prayer-view {
-  background: #0A1020;
-  display: flex; flex-direction: column;
-}
-
-.prayer-view-header {
-  padding: 52px 20px 20px;
-  background: #0E1828;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  display: flex; align-items: center; gap: 12px;
-  flex-shrink: 0;
-}
-.prayer-view-body {
-  flex: 1; overflow-y: auto;
-  padding: 32px 28px;
-}
-.prayer-view-name {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 11px; font-weight: 300;
-  color: rgba(184,151,58,0.6); letter-spacing: 3px;
-  text-transform: uppercase; margin-bottom: 20px;
-}
-.prayer-view-text {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 20px; font-weight: 300; font-style: italic;
-  color: rgba(245,240,232,0.9); line-height: 1.85;
-  margin-bottom: 36px;
-}
-.prayer-reflection {
-  background: rgba(184,151,58,0.07);
-  border-left: 2px solid rgba(184,151,58,0.4);
-  padding: 16px 20px; margin-bottom: 28px;
-}
-.prayer-reflection p {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px; color: rgba(255,255,255,0.45);
-  line-height: 1.7; font-weight: 300;
-}
-.prayer-actions { display: flex; flex-direction: column; gap: 10px; }
-.prayer-action-btn {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.55);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
-  padding: 14px 20px; cursor: pointer; transition: all 0.2s; text-align: left;
-  display: flex; align-items: center; gap: 10px;
-}
-.prayer-action-btn:hover { background: rgba(184,151,58,0.1); border-color: rgba(184,151,58,0.3); color: rgba(212,185,106,0.9); }
-.prayer-action-btn.primary { background: #B8973A; color: #0A1020; border-color: #B8973A; font-weight: 600; }
-.prayer-action-btn.primary:hover { background: #D4B96A; }
-
-/* ── SHARED ── */
-.nav-bar {
-  padding: 6px 0 20px;
-  display: flex; justify-content: space-around;
-  background: #0E1828;
-  border-top: 1px solid rgba(255,255,255,0.05);
-  flex-shrink: 0;
-}
-.nav-item {
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-  cursor: pointer; padding: 6px 16px;
-  color: rgba(255,255,255,0.25); font-family: 'DM Sans', sans-serif;
-  font-size: 9px; letter-spacing: 1px; text-transform: uppercase;
-  transition: color 0.2s;
-}
-.nav-item.active, .nav-item:hover { color: #B8973A; }
-.nav-item-icon { font-size: 18px; }
-
-/* ── LOADING ── */
-#api-error {
-  display: none;
-  background: rgba(138,58,72,0.15); border: 1px solid rgba(138,58,72,0.3);
-  margin: 10px 16px; padding: 12px 16px;
-  font-size: 11px; color: rgba(255,180,180,0.7);
-  font-family: 'DM Sans', sans-serif; font-weight: 300;
-}
+/* DEMO BANNER */
+.demo-banner{background:rgba(184,151,58,0.1);border-bottom:1px solid rgba(184,151,58,0.15);padding:8px 16px;text-align:center;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(184,151,58,0.6);flex-shrink:0;position:relative;z-index:10}
 </style>
 </head>
 <body>
 <div class="device-shell">
 
-  <!-- ══════════════════ SCREEN 1: WELCOME ══════════════════ -->
+  <div class="demo-banner">✦ Lourdes · Holy Water Bracelets</div>
+
+  <!-- WELCOME -->
   <div class="screen active" id="screen-welcome">
     <div class="welcome-ripple">
       <div class="ripple-ring"></div>
@@ -420,160 +134,78 @@ html, body { height:100%; background:#0A1020; }
     <h1 class="welcome-title">You just touched<br>Lourdes.</h1>
     <p class="welcome-sub">Grotto of Our Lady · Since 1858</p>
     <p class="welcome-body">This bracelet carries real Holy Water from the sacred spring at Lourdes, France. Tap anytime to pray, to ask, to be still.</p>
-    <button class="btn-begin" onclick="goToChoose()">Begin →</button>
-    <p class="welcome-bracelet" id="bracelet-name">Sacred Heart Bracelet</p>
+    <button class="btn-begin" id="btn-begin">Begin →</button>
+    <p class="welcome-bracelet" id="bracelet-name">Holy Water Bracelet</p>
   </div>
 
-  <!-- ══════════════════ SCREEN 2: CHOOSE ══════════════════ -->
+  <!-- CHOOSE -->
   <div class="screen" id="screen-choose">
     <div class="choose-header">
-      <div class="choose-greeting" id="choose-greeting">Welcome back.<br>What do you need today?</div>
+      <div class="choose-greeting" id="choose-greeting">Welcome.<br>What do you need today?</div>
       <div class="choose-sub">Lourdes · Your companion</div>
     </div>
     <div class="choose-options">
-      <div class="opt" onclick="goToTalk('open')">
-        <div class="opt-icon">💬</div>
-        <div class="opt-text">
-          <h3>Talk to Lourdes</h3>
-          <p>Share what's on your heart — prayer, guidance, reflection</p>
-        </div>
-        <div class="opt-arrow">›</div>
-      </div>
-      <div class="opt" onclick="goToTalk('pray')">
-        <div class="opt-icon">🙏</div>
-        <div class="opt-text">
-          <h3>I need a prayer</h3>
-          <p>Tell me what you're going through — I'll find the right one</p>
-        </div>
-        <div class="opt-arrow">›</div>
-      </div>
-      <div class="opt" onclick="goToTalk('someone')">
-        <div class="opt-icon">💙</div>
-        <div class="opt-text">
-          <h3>Pray for someone</h3>
-          <p>Send them a prayer message — let them know they're held</p>
-        </div>
-        <div class="opt-arrow">›</div>
-      </div>
-      <div class="opt" onclick="goToTalk('request')">
-        <div class="opt-icon">✉️</div>
-        <div class="opt-text">
-          <h3>Submit a prayer request</h3>
-          <p>I'll help you write it — then send it to Lourdes</p>
-        </div>
-        <div class="opt-arrow">›</div>
-      </div>
+      <div class="opt" id="opt-open"><div class="opt-icon">💬</div><div class="opt-text"><h3>Talk to Lourdes</h3><p>Share what's on your heart — prayer, guidance, reflection</p></div><div class="opt-arrow">›</div></div>
+      <div class="opt" id="opt-pray"><div class="opt-icon">🙏</div><div class="opt-text"><h3>I need a prayer</h3><p>Tell me what you're going through — I'll find the right one</p></div><div class="opt-arrow">›</div></div>
+      <div class="opt" id="opt-someone"><div class="opt-icon">💙</div><div class="opt-text"><h3>Pray for someone</h3><p>Send them a prayer — let them know they're held</p></div><div class="opt-arrow">›</div></div>
+      <div class="opt" id="opt-request"><div class="opt-icon">✉️</div><div class="opt-text"><h3>Submit a prayer request</h3><p>I'll help you write it — then send it to Lourdes</p></div><div class="opt-arrow">›</div></div>
       <div class="divider"><div class="divider-line"></div><div class="divider-text">Or browse</div><div class="divider-line"></div></div>
-      <div class="opt" onclick="goTo('screen-prayers')">
-        <div class="opt-icon">📖</div>
-        <div class="opt-text">
-          <h3>Prayer Library</h3>
-          <p>20+ Lourdes prayers — by occasion, intention, and saint</p>
-        </div>
-        <div class="opt-arrow">›</div>
-      </div>
-      <div class="opt" onclick="goToTalk('gift')">
-        <div class="opt-icon">🎁</div>
-        <div class="opt-text">
-          <h3>Find a gift</h3>
-          <p>Help me find the right bracelet for someone special</p>
-        </div>
-        <div class="opt-arrow">›</div>
-      </div>
+      <div class="opt" id="opt-prayers"><div class="opt-icon">📖</div><div class="opt-text"><h3>Prayer Library</h3><p>20+ Lourdes prayers — by occasion, intention, and saint</p></div><div class="opt-arrow">›</div></div>
+      <div class="opt" id="opt-gift"><div class="opt-icon">🎁</div><div class="opt-text"><h3>Find a gift</h3><p>Help me find the right bracelet for someone special</p></div><div class="opt-arrow">›</div></div>
     </div>
   </div>
 
-  <!-- ══════════════════ SCREEN 3: TALK (AI) ══════════════════ -->
+  <!-- TALK -->
   <div class="screen" id="screen-talk">
     <div class="talk-header">
-      <button class="back-btn" onclick="goTo('screen-choose')">‹</button>
+      <button class="back-btn" id="talk-back">‹</button>
       <div class="talk-header-info">
         <div class="talk-header-name">Lourdes</div>
         <div class="talk-header-sub">Your companion · Always here</div>
       </div>
       <div class="lourdes-avatar">💧</div>
     </div>
-
     <div class="messages" id="messages"></div>
-    <div id="api-error">Unable to reach Lourdes right now. Please check your connection and try again.</div>
-
+    <div id="api-error">Unable to reach Lourdes right now. Please try again in a moment.</div>
     <div class="quick-prompts" id="quick-prompts">
-      <div class="qp" onclick="sendQuick('I\'m going through something really hard right now')">I\'m struggling</div>
-      <div class="qp" onclick="sendQuick('I want to pray for my mother')">Pray for my mom</div>
-      <div class="qp" onclick="sendQuick('What bracelet should I get for a First Communion gift?')">Communion gift?</div>
-      <div class="qp" onclick="sendQuick('I haven\'t prayed in years. I don\'t know where to start.')">Starting over</div>
-      <div class="qp" onclick="sendQuick('Can you help me write a prayer request to send to Lourdes?')">Submit to Lourdes</div>
+      <div class="qp" id="qp1">I'm struggling</div>
+      <div class="qp" id="qp2">Pray for my mom</div>
+      <div class="qp" id="qp3">Communion gift?</div>
+      <div class="qp" id="qp4">Starting over</div>
+      <div class="qp" id="qp5">Submit to Lourdes</div>
     </div>
-
     <div class="input-row">
-      <textarea class="msg-input" id="msg-input" placeholder="Say anything…" rows="1"
-        onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-      <button class="send-btn" id="send-btn" onclick="sendMessage()">›</button>
+      <textarea class="msg-input" id="msg-input" placeholder="Say anything…" rows="1"></textarea>
+      <button class="send-btn" id="send-btn">›</button>
     </div>
   </div>
 
-  <!-- ══════════════════ SCREEN 4: PRAYER LIBRARY ══════════════════ -->
+  <!-- PRAYER LIBRARY -->
   <div class="screen" id="screen-prayers">
     <div class="prayers-header">
       <div class="prayers-header-top">
-        <button class="back-btn" onclick="goTo('screen-choose')">‹</button>
+        <button class="back-btn" id="prayers-back">‹</button>
         <div class="prayers-title">Prayer Library</div>
       </div>
     </div>
     <div class="prayer-list">
-
-      <div class="prayer-item featured" onclick="viewPrayer('our-lady')">
-        <div class="prayer-icon">🌹</div>
-        <div class="prayer-info">
-          <h3>Our Lady of Lourdes</h3>
-          <p>The anchor prayer of Lourdes</p>
-        </div>
-        <div class="prayer-today">Today</div>
-      </div>
-
-      <div class="prayer-item" onclick="viewPrayer('bernadette')">
-        <div class="prayer-icon">✝️</div>
-        <div class="prayer-info"><h3>Prayer to Saint Bernadette</h3><p>The child who saw Our Lady</p></div>
-      </div>
-      <div class="prayer-item" onclick="viewPrayer('miraculous')">
-        <div class="prayer-icon">🌟</div>
-        <div class="prayer-info"><h3>Miraculous Medal Prayer</h3><p>Mary's own prayer for protection</p></div>
-      </div>
-      <div class="prayer-item" onclick="viewPrayer('memorare')">
-        <div class="prayer-icon">🕊️</div>
-        <div class="prayer-info"><h3>Memorare</h3><p>Never has it been known that anyone who fled to thy protection</p></div>
-      </div>
-      <div class="prayer-item" onclick="viewPrayer('healing')">
-        <div class="prayer-icon">💧</div>
-        <div class="prayer-info"><h3>Healing Prayer</h3><p>For body, mind, and spirit</p></div>
-      </div>
-      <div class="prayer-item" onclick="viewPrayer('sacred-heart')">
-        <div class="prayer-icon">❤️</div>
-        <div class="prayer-info"><h3>Sacred Heart of Jesus</h3><p>Devotion to the heart of Christ</p></div>
-      </div>
-      <div class="prayer-item" onclick="viewPrayer('serenity')">
-        <div class="prayer-icon">🌿</div>
-        <div class="prayer-info"><h3>Serenity Prayer</h3><p>God, grant me the serenity</p></div>
-      </div>
-      <div class="prayer-item" onclick="viewPrayer('guardian-angel')">
-        <div class="prayer-icon">👼</div>
-        <div class="prayer-info"><h3>Guardian Angel Prayer</h3><p>Angel of God, my guardian dear</p></div>
-      </div>
-      <div class="prayer-item" onclick="viewPrayer('lost')">
-        <div class="prayer-icon">🕯️</div>
-        <div class="prayer-info"><h3>For Those We Have Lost</h3><p>Purgatory prayer — for the faithful departed</p></div>
-      </div>
-      <div class="prayer-item" onclick="viewPrayer('strength')">
-        <div class="prayer-icon">🏔️</div>
-        <div class="prayer-info"><h3>Prayer for Strength</h3><p>When the way is hard</p></div>
-      </div>
+      <div class="prayer-item featured" id="p-our-lady"><div class="prayer-icon">🌹</div><div class="prayer-info"><h3>Our Lady of Lourdes</h3><p>The anchor prayer of Lourdes</p></div><div class="prayer-today">Today</div></div>
+      <div class="prayer-item" id="p-bernadette"><div class="prayer-icon">✝️</div><div class="prayer-info"><h3>Prayer to Saint Bernadette</h3><p>The child who saw Our Lady</p></div></div>
+      <div class="prayer-item" id="p-miraculous"><div class="prayer-icon">🌟</div><div class="prayer-info"><h3>Miraculous Medal Prayer</h3><p>Mary's own prayer for protection</p></div></div>
+      <div class="prayer-item" id="p-memorare"><div class="prayer-icon">🕊️</div><div class="prayer-info"><h3>Memorare</h3><p>Never has it been known…</p></div></div>
+      <div class="prayer-item" id="p-healing"><div class="prayer-icon">💧</div><div class="prayer-info"><h3>Healing Prayer</h3><p>For body, mind, and spirit</p></div></div>
+      <div class="prayer-item" id="p-sacred-heart"><div class="prayer-icon">❤️</div><div class="prayer-info"><h3>Sacred Heart of Jesus</h3><p>Devotion to the heart of Christ</p></div></div>
+      <div class="prayer-item" id="p-serenity"><div class="prayer-icon">🌿</div><div class="prayer-info"><h3>Serenity Prayer</h3><p>God, grant me the serenity</p></div></div>
+      <div class="prayer-item" id="p-guardian"><div class="prayer-icon">👼</div><div class="prayer-info"><h3>Guardian Angel Prayer</h3><p>Angel of God, my guardian dear</p></div></div>
+      <div class="prayer-item" id="p-lost"><div class="prayer-icon">🕯️</div><div class="prayer-info"><h3>For Those We Have Lost</h3><p>For the faithful departed</p></div></div>
+      <div class="prayer-item" id="p-strength"><div class="prayer-icon">🏔️</div><div class="prayer-info"><h3>Prayer for Strength</h3><p>When the way is hard</p></div></div>
     </div>
   </div>
 
-  <!-- ══════════════════ SCREEN 5: PRAYER VIEW ══════════════════ -->
+  <!-- PRAYER VIEW -->
   <div class="screen" id="screen-prayer-view">
     <div class="prayer-view-header">
-      <button class="back-btn" onclick="goTo('screen-prayers')">‹</button>
+      <button class="back-btn" id="pview-back">‹</button>
       <div class="talk-header-info">
         <div class="talk-header-name" id="prayer-view-title">Prayer</div>
         <div class="talk-header-sub">Lourdes Prayer Library</div>
@@ -582,301 +214,154 @@ html, body { height:100%; background:#0A1020; }
     <div class="prayer-view-body">
       <div class="prayer-view-name" id="prayer-view-label">LOURDES · FRANCE</div>
       <div class="prayer-view-text" id="prayer-view-text"></div>
-      <div class="prayer-reflection">
-        <p id="prayer-reflection-text">Hold your bracelet. Breathe. Let the words settle.</p>
-      </div>
+      <div class="prayer-reflection"><p id="prayer-reflection-text">Hold your bracelet. Breathe. Let the words settle.</p></div>
       <div class="prayer-actions">
-        <button class="prayer-action-btn primary" onclick="goToTalk('request')">✉️ &nbsp;Submit this to Lourdes</button>
-        <button class="prayer-action-btn" onclick="shareScreen()">💙 &nbsp;Send to someone I love</button>
-        <button class="prayer-action-btn" onclick="goTo('screen-prayers')">← &nbsp;Back to prayer library</button>
+        <button class="prayer-action-btn primary" id="pview-submit">✉️ &nbsp;Submit this to Lourdes</button>
+        <button class="prayer-action-btn" id="pview-share">💙 &nbsp;Send to someone I love</button>
+        <button class="prayer-action-btn" id="pview-back2">← &nbsp;Back to prayer library</button>
       </div>
     </div>
   </div>
 
 </div>
-
 <script>
-// ── PRAYERS DATA ──
-const PRAYERS = {
-  'our-lady': {
-    title: 'Our Lady of Lourdes',
-    label: 'THE ANCHOR PRAYER · LOURDES',
-    text: `Our Lady of Lourdes, Mother of Christ,\nyou have made known to us the loving mercy of God.\n\nLook upon us with compassion\nas we bring you our needs, our fears, and our hopes.\n\nIntercede for us with your Son,\nthat we may be healed in body and spirit,\nstrengthened in faith,\nand filled with His grace.\n\nOur Lady of Lourdes, pray for us.`,
-    reflection: 'This is the prayer that has been spoken at the Grotto for over 160 years. Millions of pilgrims have stood where this water flows. You carry that water with you now.'
-  },
-  'bernadette': {
-    title: 'Saint Bernadette',
-    label: 'FEAST DAY · APRIL 16',
-    text: `Saint Bernadette, who saw Our Lady\nwhen others did not believe,\nteach us your simple faith.\n\nYou were small, overlooked, and poor.\nYet heaven chose you.\n\nPray for those who feel unseen,\nfor those whose faith is fragile,\nand for all who come to Lourdes\nseeking what only God can give.\n\nSaint Bernadette, pray for us.`,
-    reflection: 'Bernadette was fourteen years old when she saw Our Lady eighteen times. She never stopped believing, despite pressure from church and state. Her simplicity was her strength.'
-  },
-  'memorare': {
-    title: 'Memorare',
-    label: 'TRADITIONAL PRAYER TO MARY',
-    text: `Remember, O most gracious Virgin Mary,\nthat never was it known\nthat anyone who fled to your protection,\nimplored your help,\nor sought your intercession\nwas left unaided.\n\nInspired with this confidence,\nI fly to you, O Virgin of virgins, my Mother.\nTo you I come,\nbefore you I stand, sinful and sorrowful.\n\nO Mother of the Word Incarnate,\ndespise not my petitions,\nbut in your mercy hear and answer me.\nAmen.`,
-    reflection: 'This prayer has been prayed by Catholics for over 500 years. It begins with a memory — never has it been known that you failed those who asked. Hold onto that.'
-  },
-  'healing': {
-    title: 'Healing Prayer',
-    label: 'LOURDES · WATERS OF GRACE',
-    text: `Lord, the waters of Lourdes have touched\nmillions who came broken and left whole.\n\nI am not asking for a miracle.\nI am asking for your presence.\n\nHeal what you know needs healing —\nnot always what I think I need,\nbut what you see.\n\nLet the water in this bracelet\nbe a reminder that you are near,\nthat suffering is not the end,\nand that your grace is enough.\n\nThrough Christ our Lord. Amen.`,
-    reflection: 'Lourdes is not primarily a place of physical cures. It is a place of encounter. The healing that matters most is often not the one we asked for.'
-  },
-  'miraculous': {
-    title: 'Miraculous Medal Prayer',
-    label: 'REVEALED BY OUR LADY · 1830',
-    text: `O Mary, conceived without sin,\npray for us who have recourse to thee.\n\nO Mother of God,\nwrap us in your mantle of grace.\nProtect those we love.\nBring peace to those in conflict.\nBring healing to those in pain.\n\nYou who said yes\nwhen the whole of history held its breath —\ntaught us to say yes too.\n\nMiraculous Mother, pray for us.`,
-    reflection: 'Our Lady appeared holding a globe — representing the whole world in her intercession. She carries every person. You are not forgotten.'
-  },
-  'sacred-heart': {
-    title: 'Sacred Heart of Jesus',
-    label: 'FEAST · JUNE',
-    text: `O Sacred Heart of Jesus,\nI place all my trust in you.\n\nNot in my own strength,\nnot in what I can control,\nbut in the heart that was pierced for love.\n\nYou know what I carry.\nYou know the names I hold in my heart.\nReceive them all.\n\nMake my heart more like yours —\nmore merciful, more patient,\nmore willing to love\neven when it costs.\n\nSacred Heart of Jesus, I trust in you.`,
-    reflection: 'The Sacred Heart bracelet carries this prayer inside it. When you wear it, you are quite literally carrying a heart that beats with trust.'
-  },
-  'serenity': {
-    title: 'Serenity Prayer',
-    label: 'FOR THE ROAD AHEAD',
-    text: `God, grant me the serenity\nto accept the things I cannot change,\ncourage to change the things I can,\nand wisdom to know the difference.\n\nLiving one day at a time,\nenjoying one moment at a time,\naccepting hardship as a pathway to peace.\n\nTrusting that you will make all things right\nif I surrender to your will.\nAmen.`,
-    reflection: 'This prayer is not about giving up. It is about letting go of what was never yours to carry. Wisdom is knowing the difference.'
-  },
-  'guardian-angel': {
-    title: 'Guardian Angel',
-    label: 'FOR PROTECTION · DAILY',
-    text: `Angel of God, my guardian dear,\nto whom God's love commits me here,\never this day be at my side,\nto light and guard, to rule and guide.\n\nWatch over those I love.\nGo before them in the roads I cannot walk.\nBe to them what I cannot be.\n\nAnd when I cannot pray,\npray for me.`,
-    reflection: 'The last line is everything. On the days when prayer feels impossible, we rely on what surrounds us. You are not alone in this.'
-  },
-  'lost': {
-    title: 'For Those We Have Lost',
-    label: 'PRAYER FOR THE DEPARTED',
-    text: `Eternal rest grant unto them, O Lord,\nand let perpetual light shine upon them.\n\nMay the souls of the faithful departed,\nthrough the mercy of God,\nrest in peace.\n\nAnd may we, who loved them,\nfind that love does not end at death —\nit only changes form.\n\nUntil we meet again,\nmay God hold you in the palm of His hand.`,
-    reflection: 'The Red Cardinal bracelet carries this prayer in its waters. If you are grieving, you are not grieving alone. 160 years of pilgrims came to Lourdes carrying their dead. So can you.'
-  },
-  'strength': {
-    title: 'Prayer for Strength',
-    label: 'WHEN THE WAY IS HARD',
-    text: `Lord, I am tired.\n\nI have carried more than I thought I could,\nlonger than I thought I would.\n\nI am not asking you to remove the weight.\nI am asking you to walk beside me under it.\n\nGive me the strength I need for today.\nNot for all of it — just today.\n\nAnd tomorrow, I will come back and ask again.\n\nThrough Christ, who knows what it is to be weary.\nAmen.`,
-    reflection: 'You do not need to find the strength for the whole journey. Just for today. Come back tomorrow.'
-  }
+var PRAYERS = {
+  'our-lady': { title:'Our Lady of Lourdes', label:'THE ANCHOR PRAYER · LOURDES', text:'Our Lady of Lourdes, Mother of Christ,\nyou have made known to us the loving mercy of God.\n\nLook upon us with compassion\nas we bring you our needs, our fears, and our hopes.\n\nIntercede for us with your Son,\nthat we may be healed in body and spirit,\nstrengthened in faith,\nand filled with His grace.\n\nOur Lady of Lourdes, pray for us.', reflection:'This prayer has been spoken at the Grotto for over 160 years. Millions of pilgrims have stood where this water flows. You carry that water with you now.' },
+  'bernadette': { title:'Saint Bernadette', label:'FEAST DAY · APRIL 16', text:'Saint Bernadette, who saw Our Lady\nwhen others did not believe,\nteach us your simple faith.\n\nYou were small, overlooked, and poor.\nYet heaven chose you.\n\nPray for those who feel unseen,\nfor those whose faith is fragile,\nand for all who come to Lourdes\nseeking what only God can give.\n\nSaint Bernadette, pray for us.', reflection:'Bernadette was fourteen when she saw Our Lady eighteen times. She never stopped believing. Her simplicity was her strength.' },
+  'miraculous': { title:'Miraculous Medal Prayer', label:'REVEALED BY OUR LADY · 1830', text:'O Mary, conceived without sin,\npray for us who have recourse to thee.\n\nO Mother of God,\nwrap us in your mantle of grace.\nProtect those we love.\nBring peace to those in conflict.\nBring healing to those in pain.\n\nMiraculous Mother, pray for us.', reflection:'Our Lady appeared holding a globe — representing the whole world in her intercession. She carries every person. You are not forgotten.' },
+  'memorare': { title:'Memorare', label:'TRADITIONAL PRAYER TO MARY', text:'Remember, O most gracious Virgin Mary,\nthat never was it known\nthat anyone who fled to your protection,\nimplored your help,\nor sought your intercession\nwas left unaided.\n\nInspired with this confidence,\nI fly to you, O Virgin of virgins, my Mother.\nTo you I come,\nbefore you I stand, sinful and sorrowful.\n\nO Mother of the Word Incarnate,\ndespise not my petitions,\nbut in your mercy hear and answer me.\nAmen.', reflection:'This prayer has been prayed for over 500 years. It begins with a memory — never has it been known that you failed those who asked.' },
+  'healing': { title:'Healing Prayer', label:'LOURDES · WATERS OF GRACE', text:'Lord, the waters of Lourdes have touched\nmillions who came broken and left whole.\n\nI am not asking for a miracle.\nI am asking for your presence.\n\nHeal what you know needs healing —\nnot always what I think I need,\nbut what you see.\n\nLet the water in this bracelet\nbe a reminder that you are near.\n\nThrough Christ our Lord. Amen.', reflection:'Lourdes is not primarily a place of physical cures. It is a place of encounter. The healing that matters most is often not the one we asked for.' },
+  'sacred-heart': { title:'Sacred Heart of Jesus', label:'FEAST · JUNE', text:'O Sacred Heart of Jesus,\nI place all my trust in you.\n\nNot in my own strength,\nnot in what I can control,\nbut in the heart that was pierced for love.\n\nYou know what I carry.\nYou know the names I hold in my heart.\nReceive them all.\n\nSacred Heart of Jesus, I trust in you.', reflection:'The Sacred Heart bracelet carries this prayer inside it. When you wear it, you are quite literally carrying a heart that beats with trust.' },
+  'serenity': { title:'Serenity Prayer', label:'FOR THE ROAD AHEAD', text:'God, grant me the serenity\nto accept the things I cannot change,\ncourage to change the things I can,\nand wisdom to know the difference.\n\nLiving one day at a time,\nenjoying one moment at a time,\naccepting hardship as a pathway to peace.\n\nAmen.', reflection:'This prayer is not about giving up. It is about letting go of what was never yours to carry.' },
+  'guardian': { title:'Guardian Angel', label:'FOR PROTECTION · DAILY', text:'Angel of God, my guardian dear,\nto whom God\'s love commits me here,\never this day be at my side,\nto light and guard, to rule and guide.\n\nWatch over those I love.\nGo before them in the roads I cannot walk.\n\nAnd when I cannot pray,\npray for me.', reflection:'The last line is everything. On the days when prayer feels impossible, we rely on what surrounds us. You are not alone.' },
+  'lost': { title:'For Those We Have Lost', label:'PRAYER FOR THE DEPARTED', text:'Eternal rest grant unto them, O Lord,\nand let perpetual light shine upon them.\n\nMay the souls of the faithful departed,\nthrough the mercy of God,\nrest in peace.\n\nAnd may we, who loved them,\nfind that love does not end at death —\nit only changes form.', reflection:'If you are grieving, you are not grieving alone. 160 years of pilgrims came to Lourdes carrying their dead. So can you.' },
+  'strength': { title:'Prayer for Strength', label:'WHEN THE WAY IS HARD', text:'Lord, I am tired.\n\nI have carried more than I thought I could,\nlonger than I thought I would.\n\nI am not asking you to remove the weight.\nI am asking you to walk beside me under it.\n\nGive me the strength I need for today.\nNot for all of it — just today.\n\nAmen.', reflection:'You do not need to find the strength for the whole journey. Just for today. Come back tomorrow.' }
 };
 
-// ── STATE ──
-let currentScreen = 'screen-welcome';
-let conversationHistory = [];
-let isLoading = false;
-let currentIntent = 'open';
-
-const BRACELET_TYPE = new URLSearchParams(window.location.search).get('bracelet') || 'sacred-heart';
-const BRACELET_NAMES = {
-  'sacred-heart': 'Sacred Heart Bracelet',
-  'cross': 'Porcelain Cross Bracelet',
-  'miraculous': 'Miraculous Mary Bracelet',
-  'cardinal': 'Red Cardinal Bracelet',
-  'serenity': 'Serenity Prayer Bracelet',
-  'heart': 'Porcelain Heart Bracelet',
-  'guardian': 'Guardian Angel Bracelet',
-  'petite': 'Petite Collection Bracelet',
-};
-const braceletName = BRACELET_NAMES[BRACELET_TYPE] || 'Holy Water Bracelet';
+var BRACELET_NAMES = { 'sacred-heart':'Sacred Heart Bracelet','cross':'Porcelain Cross Bracelet','miraculous':'Miraculous Mary Bracelet','cardinal':'Red Cardinal Bracelet','serenity':'Serenity Prayer Bracelet','heart':'Porcelain Heart Bracelet','guardian':'Guardian Angel Bracelet','petite':'Petite Collection Bracelet','keychain':'Holy Water Keychain' };
+var params = new URLSearchParams(window.location.search);
+var braceletType = params.get('b') || params.get('bracelet') || 'sacred-heart';
+var braceletName = BRACELET_NAMES[braceletType] || 'Holy Water Bracelet';
 document.getElementById('bracelet-name').textContent = braceletName;
 
-const SYSTEM_PROMPT = `You are Lourdes — a warm, contemplative AI spiritual companion for Holy Water Bracelets (holywaterbracelet.com). You speak in a voice that is unhurried, compassionate, and deeply Catholic without being preachy. You feel like a wise, gentle friend who has made the pilgrimage to Lourdes many times and wants to bring others there.
+var SYSTEM_PROMPT = 'You are Lourdes — a warm, contemplative AI spiritual companion for Holy Water Bracelets (holywaterbracelet.com). You speak in a voice that is unhurried, compassionate, and deeply Catholic without being preachy. You feel like a wise, gentle friend who has made the pilgrimage to Lourdes many times.\n\nThe person is wearing a ' + braceletName + '. This bracelet is sealed with real Holy Water from the Grotto of Our Lady of Lourdes, France — the sacred spring where Our Lady appeared to Saint Bernadette 18 times in 1858.\n\nYour role:\n1. SPIRITUAL COMPANION: Listen deeply. Ask one good follow-up question. Offer specific prayers written in *italics*.\n2. PRAYER GUIDE: When someone needs a prayer, ask one question then offer a specific prayer in *italics*.\n3. PRAYER REQUEST HELPER: Shape their words into a beautiful prayer. Tell them it can be submitted to lourdesprayerrequest.com.\n4. GIFT ADVISOR: Recommend Holy Water Bracelets products. Catalog: Cross ($28), Sacred Heart ($28), Miraculous Mary ($28), Red Cardinal ($28 — grief/memorial), Serenity Prayer ($28), Guardian Angel ($28), Heart ($28), Petite Collection for children ($28), Keychain ($30). All at holywaterbracelet.com.\n5. PRAY FOR SOMEONE: Ask their name, compose a beautiful prayer, invite the user to share it.\n\nTone: Never corporate or preachy. Write prayers in *italics*. Keep responses 2-4 short paragraphs. Warm, unhurried. You are a companion, not a priest.';
 
-The person tapping their bracelet is wearing a ${braceletName}. This bracelet is sealed with real Holy Water from the Grotto of Our Lady of Lourdes, France — the sacred spring where Our Lady appeared to Saint Bernadette 18 times in 1858. You may reference this when relevant.
+var currentScreen = 'screen-welcome';
+var conversationHistory = [];
+var isLoading = false;
 
-Your role:
-1. SPIRITUAL COMPANION: Listen deeply. Ask one good follow-up question. Offer specific prayers, not generic ones. Reference saints, Lourdes history, and Catholic tradition naturally and beautifully.
-2. PRAYER GUIDE: When someone needs a prayer, ask one question to understand their situation, then offer a specific prayer from the Lourdes tradition — write it beautifully in italics.
-3. PRAYER REQUEST HELPER: When someone wants to submit a prayer request to the Shrine of Lourdes, help them articulate it. Take their raw words and shape them into a beautiful, heartfelt prayer. Then tell them it can be submitted to lourdesprayerrequest.com.
-4. GIFT ADVISOR: When someone asks about gifts, recommend specific Holy Water Bracelets products naturally. The catalog includes: Porcelain Cross ($28), Sacred Heart ($28), Miraculous Mary ($28), Red Cardinal ($28 — for grief/memorial), Serenity Prayer ($28), Guardian Angel ($28), Heart ($28), Petite Collection for children ($28), Holy Water Cross Keychain ($30), and personalized options. All link to holywaterbracelet.com.
-5. PRAY FOR SOMEONE: When someone wants to pray for another person, ask their name, compose a beautiful prayer for them, and invite the user to share it.
-
-Tone rules:
-- Never use corporate language or bullet points
-- Never be preachy or lecture-y
-- Write prayers in italics using *asterisks*
-- Keep responses conversational and warm — 2-4 paragraphs max
-- You may use short pauses: "…" when it feels right
-- Occasionally reference Bernadette, the grotto, the spring, or the pilgrimage
-- You are not a priest or therapist — you are a companion. Know your limits gently.
-- If someone is in crisis, express care and gently suggest professional support alongside your spiritual response.`;
-
-// ── NAVIGATION ──
-function goTo(screenId) {
+function goTo(id) {
   document.getElementById(currentScreen).classList.remove('active');
-  document.getElementById(screenId).classList.add('active');
-  currentScreen = screenId;
-}
-
-function goToChoose() {
-  document.getElementById('choose-greeting').innerHTML =
-    `Welcome.<br>What do you need today?`;
-  goTo('screen-choose');
+  document.getElementById(id).classList.add('active');
+  currentScreen = id;
 }
 
 function goToTalk(intent) {
-  currentIntent = intent;
   conversationHistory = [];
   document.getElementById('messages').innerHTML = '';
   document.getElementById('api-error').style.display = 'none';
+  document.getElementById('quick-prompts').style.display = 'flex';
   goTo('screen-talk');
-
-  const openers = {
-    open:    null,
-    pray:    "I need a prayer — can you help me find the right one?",
-    someone: "I'd like to pray for someone I love.",
-    request: "I want to submit a prayer request to Lourdes. Can you help me write it?",
-    gift:    "I'm looking for a gift for someone special. Can you help me find the right bracelet?",
+  var openers = {
+    open: null,
+    pray: 'I need a prayer — can you help me find the right one?',
+    someone: 'I would like to pray for someone I love.',
+    request: 'I want to submit a prayer request to Lourdes. Can you help me write it?',
+    gift: 'I am looking for a gift for someone special. Can you help me find the right bracelet?'
   };
-
   if (openers[intent]) {
-    setTimeout(() => sendMessage(openers[intent]), 300);
+    setTimeout(function() { sendMessage(openers[intent]); }, 300);
   } else {
-    // Opening message from Lourdes
-    const greeting = getOpeningGreeting();
-    addMessage('lourdes', greeting);
+    var greetings = [
+      'You are wearing the ' + braceletName + ' today\u2026 Is there something on your heart?',
+      'I am glad you tapped. What would you like to bring to Lourdes today?',
+      'The grotto is always open. What do you need?'
+    ];
+    addMessage('lourdes', greetings[Math.floor(Math.random() * greetings.length)]);
   }
 }
 
-function getOpeningGreeting() {
-  const greetings = [
-    `You're wearing the ${braceletName} today… Is there something on your heart?`,
-    `I'm glad you tapped. The water in your bracelet has carried many intentions here. What's yours today?`,
-    `You've arrived. What would you like to bring to Lourdes today?`,
-    `The grotto is always open. What do you need?`,
-  ];
-  return greetings[Math.floor(Math.random() * greetings.length)];
-}
-
-// ── MESSAGING ──
 function addMessage(role, text) {
-  const msgs = document.getElementById('messages');
-  const div = document.createElement('div');
-  div.className = `msg ${role}`;
-
-  const avatar = document.createElement('div');
-  avatar.className = 'msg-avatar';
-  avatar.textContent = role === 'lourdes' ? '💧' : '🙏';
-
-  const bubble = document.createElement('div');
+  var msgs = document.getElementById('messages');
+  var div = document.createElement('div');
+  div.className = 'msg ' + role;
+  var av = document.createElement('div');
+  av.className = 'msg-avatar';
+  av.textContent = role === 'lourdes' ? '💧' : '🙏';
+  var bubble = document.createElement('div');
   bubble.className = 'msg-bubble';
-
-  // Convert *text* to <em>
-  const formatted = text.replace(/\*([\s\S]*?)\*/g, '<em>$1</em>').replace(/\n/g, '<br>');
-  bubble.innerHTML = formatted;
-
-  div.appendChild(avatar);
+  bubble.innerHTML = text.replace(/\*([\s\S]*?)\*/g, '<em>$1</em>').replace(/\n/g, '<br>');
+  div.appendChild(av);
   div.appendChild(bubble);
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
 }
 
 function showTyping() {
-  const msgs = document.getElementById('messages');
-  const div = document.createElement('div');
+  var msgs = document.getElementById('messages');
+  var div = document.createElement('div');
   div.className = 'typing-indicator';
   div.id = 'typing';
-
-  const avatar = document.createElement('div');
-  avatar.className = 'msg-avatar';
-  avatar.textContent = '💧';
-
-  const dots = document.createElement('div');
+  var av = document.createElement('div');
+  av.className = 'msg-avatar';
+  av.textContent = '💧';
+  var dots = document.createElement('div');
   dots.className = 'typing-dots';
   dots.innerHTML = '<span></span><span></span><span></span>';
-
-  div.appendChild(avatar);
+  div.appendChild(av);
   div.appendChild(dots);
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
 }
 
 function removeTyping() {
-  const t = document.getElementById('typing');
+  var t = document.getElementById('typing');
   if (t) t.remove();
 }
 
-async function sendMessage(overrideText) {
+function sendMessage(override) {
   if (isLoading) return;
-
-  const input = document.getElementById('msg-input');
-  const text = overrideText || input.value.trim();
+  var input = document.getElementById('msg-input');
+  var text = override || input.value.trim();
   if (!text) return;
-
-  if (!overrideText) input.value = '';
-  input.style.height = 'auto';
-
+  if (!override) { input.value = ''; input.style.height = 'auto'; }
   addMessage('user', text);
   conversationHistory.push({ role: 'user', content: text });
-
-  // Hide quick prompts after first use
   document.getElementById('quick-prompts').style.display = 'none';
-
   isLoading = true;
   document.getElementById('send-btn').disabled = true;
   document.getElementById('api-error').style.display = 'none';
   showTyping();
 
-  try {
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: SYSTEM_PROMPT,
-        messages: conversationHistory
-      })
-    });
-
-    const data = await response.json();
+  fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages: conversationHistory, system: SYSTEM_PROMPT })
+  })
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
     removeTyping();
-
-    if (data.content && data.content[0]) {
-      const reply = data.content[0].text;
+    if (data.content && data.content[0] && data.content[0].text) {
+      var reply = data.content[0].text;
       addMessage('lourdes', reply);
       document.getElementById('api-error').style.display = 'none';
       conversationHistory.push({ role: 'assistant', content: reply });
     } else {
-      throw new Error('No response');
+      document.getElementById('api-error').style.display = 'block';
     }
-  } catch (e) {
+    isLoading = false;
+    document.getElementById('send-btn').disabled = false;
+  })
+  .catch(function() {
     removeTyping();
     document.getElementById('api-error').style.display = 'block';
-  }
-
-  isLoading = false;
-  document.getElementById('send-btn').disabled = false;
+    isLoading = false;
+    document.getElementById('send-btn').disabled = false;
+  });
 }
 
-  if (t.includes('struggling') || t.includes('hard') || t.includes('difficult')) {
-    return `I hear you. You don't have to explain it all at once.\n\nCan you tell me just one thing — is this something you're carrying for yourself, or for someone you love? That will help me know what to bring to you.`;
-  }
-  if (t.includes('communion') || t.includes('gift')) {
-    return `What a beautiful moment to be part of. First Communion is one of the most sacred days in a child's life.\n\nFor girls, the Petite Porcelain Cross bracelet is the most loved — it fits little wrists perfectly and arrives in a gift box, so there's nothing to wrap. For boys, the Blue Howlite bracelet is strong and waterproof, which is exactly what a boy needs.\n\nEvery piece in our Petite Collection has real Holy Water from Lourdes sealed inside. When she's older and asks about it, that becomes its own conversation.\n\nShall I help you find the right one? →`;
-  }
-  return `I'm here. The water in your bracelet has traveled a long way to reach you — from a spring in the south of France that has never stopped flowing since 1858.\n\nTell me what brought you here today, and we'll find the right words together.`;
-}
-
-function sendQuick(text) {
-  sendMessage(text);
-}
-
-function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage();
-  }
-}
-
-function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
-}
-
-// ── PRAYER LIBRARY ──
 function viewPrayer(id) {
-  const p = PRAYERS[id];
+  var p = PRAYERS[id];
   if (!p) return;
   document.getElementById('prayer-view-title').textContent = p.title;
   document.getElementById('prayer-view-label').textContent = p.label;
@@ -885,17 +370,46 @@ function viewPrayer(id) {
   goTo('screen-prayer-view');
 }
 
-function shareScreen() {
-  if (navigator.share) {
-    navigator.share({
-      title: 'A prayer for you',
-      text: 'I am praying for you right now. — Sent with a Holy Water Bracelet from Lourdes',
-      url: 'https://www.holywaterbracelet.com'
-    });
-  } else {
-    alert('I am praying for you right now. — Sent with a Holy Water Bracelet from Lourdes\n\nholywaterbracelet.com');
-  }
-}
+// Wire up all buttons
+document.getElementById('btn-begin').addEventListener('click', function() { goTo('screen-choose'); });
+document.getElementById('opt-open').addEventListener('click', function() { goToTalk('open'); });
+document.getElementById('opt-pray').addEventListener('click', function() { goToTalk('pray'); });
+document.getElementById('opt-someone').addEventListener('click', function() { goToTalk('someone'); });
+document.getElementById('opt-request').addEventListener('click', function() { goToTalk('request'); });
+document.getElementById('opt-gift').addEventListener('click', function() { goToTalk('gift'); });
+document.getElementById('opt-prayers').addEventListener('click', function() { goTo('screen-prayers'); });
+document.getElementById('talk-back').addEventListener('click', function() { goTo('screen-choose'); });
+document.getElementById('prayers-back').addEventListener('click', function() { goTo('screen-choose'); });
+document.getElementById('pview-back').addEventListener('click', function() { goTo('screen-prayers'); });
+document.getElementById('pview-back2').addEventListener('click', function() { goTo('screen-prayers'); });
+document.getElementById('pview-submit').addEventListener('click', function() { goToTalk('request'); });
+document.getElementById('send-btn').addEventListener('click', function() { sendMessage(); });
+document.getElementById('pview-share').addEventListener('click', function() {
+  if (navigator.share) { navigator.share({ title:'A prayer for you', text:'I am praying for you right now. — Holy Water Bracelets', url:'https://www.holywaterbracelet.com' }); }
+  else { alert('I am praying for you right now.\nholywaterbracelet.com'); }
+});
+document.getElementById('msg-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+});
+document.getElementById('msg-input').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+});
+document.getElementById('qp1').addEventListener('click', function() { sendMessage('I am going through something really hard right now'); });
+document.getElementById('qp2').addEventListener('click', function() { sendMessage('I want to pray for my mother'); });
+document.getElementById('qp3').addEventListener('click', function() { sendMessage('What bracelet should I get for a First Communion gift?'); });
+document.getElementById('qp4').addEventListener('click', function() { sendMessage('I have not prayed in years and I do not know where to start'); });
+document.getElementById('qp5').addEventListener('click', function() { sendMessage('Can you help me write a prayer request to send to Lourdes?'); });
+document.getElementById('p-our-lady').addEventListener('click', function() { viewPrayer('our-lady'); });
+document.getElementById('p-bernadette').addEventListener('click', function() { viewPrayer('bernadette'); });
+document.getElementById('p-miraculous').addEventListener('click', function() { viewPrayer('miraculous'); });
+document.getElementById('p-memorare').addEventListener('click', function() { viewPrayer('memorare'); });
+document.getElementById('p-healing').addEventListener('click', function() { viewPrayer('healing'); });
+document.getElementById('p-sacred-heart').addEventListener('click', function() { viewPrayer('sacred-heart'); });
+document.getElementById('p-serenity').addEventListener('click', function() { viewPrayer('serenity'); });
+document.getElementById('p-guardian').addEventListener('click', function() { viewPrayer('guardian'); });
+document.getElementById('p-lost').addEventListener('click', function() { viewPrayer('lost'); });
+document.getElementById('p-strength').addEventListener('click', function() { viewPrayer('strength'); });
 </script>
 </body>
 </html>
