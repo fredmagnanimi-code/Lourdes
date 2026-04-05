@@ -834,12 +834,13 @@ async function sendMessage(overrideText) {
     removeTyping();
 
     if (data.content && data.content[0]) {
-      const reply = data.content[0].text;
-      addMessage('lourdes', reply);
-      conversationHistory.push({ role: 'assistant', content: reply });
-    } else {
-      throw new Error('No response');
-    }
+  const reply = data.content[0].text;
+  addMessage('lourdes', reply);
+  document.getElementById('api-error').style.display = 'none';
+  conversationHistory.push({ role: 'assistant', content: reply });
+} else {
+  throw new Error('No response');
+}
   } catch (e) {
     removeTyping();
     document.getElementById('api-error').style.display = 'block';
